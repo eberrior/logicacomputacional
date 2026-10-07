@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingeniero de Algoritmos - Lógica Computacional</title>
+<style>
+:root{
+  --bg:#070b18; --panel:#10182d; --panel2:#16213d; --text:#eef4ff;
+  --muted:#a9b6d3; --cyan:#32e6ff; --violet:#9b6cff; --green:#42e695;
+  --yellow:#ffd166; --red:#ff6b8a; --border:rgba(255,255,255,.12);
+  --shadow:0 18px 45px rgba(0,0,0,.35); --radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; min-height:100vh; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:radial-gradient(circle at 20% 0%,#17244b 0,#070b18 42%,#03050c 100%);
+  color:var(--text); line-height:1.55;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{width:min(1120px,100%);margin:auto;padding:20px}
+header{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0 22px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));color:#07101d;font-weight:900;
+  box-shadow:0 0 30px rgba(50,230,255,.25)
+}
+.brand strong{display:block;font-size:1rem}.brand span{display:block;color:var(--muted);font-size:.82rem}
+.sound-btn,.ghost{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);
+  min-height:44px;padding:10px 14px;border-radius:12px
+}
+.screen{display:none}.screen.active{display:block}
+.card{
+  background:linear-gradient(145deg,rgba(16,24,45,.96),rgba(10,15,30,.96));
+  border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)
+}
+.hero{text-align:center;padding:44px 24px}
+.eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:.75rem;font-weight:800}
+h1{font-size:clamp(2rem,6vw,4.3rem);line-height:1.02;margin:12px 0}
+h2{margin-top:0;font-size:clamp(1.4rem,4vw,2rem)}
+h3{margin-bottom:8px}
+.gradient{background:linear-gradient(90deg,var(--cyan),#fff,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+p{color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.primary,.secondary,.danger{
+  border:0;border-radius:13px;padding:13px 18px;min-height:46px;font-weight:800
+}
+.primary{background:linear-gradient(90deg,var(--cyan),var(--violet));color:#06101b}
+.secondary{background:#1b2848;color:var(--text);border:1px solid var(--border)}
+.danger{background:rgba(255,107,138,.13);color:#ffb1c3;border:1px solid rgba(255,107,138,.3)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
+.info{padding:15px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.035)}
+.info b{display:block;color:var(--text);margin-bottom:4px}.info span{color:var(--muted);font-size:.9rem}
+label{display:block;font-weight:700;margin:14px 0 7px}
+input,textarea{
+  width:100%;border:1px solid var(--border);border-radius:12px;background:#0a1124;color:var(--text);
+  padding:13px;outline:none
+}
+input:focus,textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(50,230,255,.1)}
+textarea{min-height:120px;resize:vertical}
+.checkbox{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.checkbox input{width:20px;height:20px;flex:0 0 auto;margin-top:3px}
+.error{color:#ff9eb3;font-size:.9rem;margin-top:8px}
+.notice{padding:14px 16px;border-left:4px solid var(--yellow);background:rgba(255,209,102,.07);border-radius:10px;color:#e9d9a5}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(7,11,24,.92);backdrop-filter:blur(12px);padding:10px 0}
+.progress{height:9px;background:#1b2540;border-radius:99px;overflow:hidden}
+.progress>div{height:100%;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .3s}
+.status-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin:8px 0}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.level{
+  position:relative;padding:18px;border-radius:16px;border:1px solid var(--border);background:#0c1429;min-height:160px
+}
+.level.locked{opacity:.5}.level.done{border-color:rgba(66,230,149,.55)}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;
+  background:rgba(50,230,255,.1);color:var(--cyan);font-size:.75rem;font-weight:800
+}
+.question{margin-top:18px}
+.question-text{font-size:clamp(1.15rem,3vw,1.55rem);font-weight:800;line-height:1.35}
+.option{
+  display:block;width:100%;text-align:left;margin:10px 0;padding:14px;border-radius:13px;
+  border:1px solid var(--border);background:#0c1429;color:var(--text);min-height:52px
+}
+.option:hover,.option.selected{border-color:var(--cyan);background:rgba(50,230,255,.08)}
+.option.selected{box-shadow:0 0 0 2px rgba(50,230,255,.12)}
+.hint{
+  margin-top:14px;padding:14px;border-radius:12px;background:rgba(155,108,255,.08);
+  border:1px solid rgba(155,108,255,.25);color:#d9ccff
+}
+.timer{font-variant-numeric:tabular-nums;color:var(--yellow);font-weight:900}
+.result-score{text-align:center;padding:28px;border-radius:18px;background:linear-gradient(145deg,rgba(50,230,255,.09),rgba(155,108,255,.1))}
+.score{font-size:clamp(3rem,10vw,5rem);font-weight:950}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.metric{padding:14px;border-radius:14px;background:#0c1429;border:1px solid var(--border);text-align:center}
+.metric b{display:block;font-size:1.25rem}.metric span{font-size:.78rem;color:var(--muted)}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{color:var(--cyan);font-size:.82rem}
+.small{font-size:.82rem;color:var(--muted)}
+@media(max-width:800px){
+  .levels{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .info-grid,.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .app{padding:12px}.card{padding:17px}.hero{padding:30px 16px}
+  .grid,.levels,.info-grid,.metric-grid{grid-template-columns:1fr}
+  .actions>*{width:100%}.primary,.secondary,.danger{width:100%}
+  header{align-items:flex-start}.brand span{max-width:190px}
+}
+@media print{
+  body{background:#fff;color:#111}.app{width:100%;padding:0}
+  header,.no-print{display:none!important}.screen{display:none!important}
+  #screen-results{display:block!important}.card{box-shadow:none;border:0;color:#111;background:#fff}
+  p,.small,.info span{color:#444}.table-wrap{overflow:visible}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="no-print">
+  <div class="brand">
+    <div class="logo">λ</div>
+    <div><strong>Ingeniero de Algoritmos</strong><span>Lógica Computacional · Universidad Libre</span></div>
+  </div>
+  <button class="sound-btn" id="soundBtn" type="button">🔊 Sonido: activado</button>
+</header>
+
+<section id="screen-welcome" class="screen active">
+  <div class="card hero">
+    <div class="eyebrow">Misión de lógica computacional</div>
+    <h1><span class="gradient">Ingeniero de Algoritmos</span></h1>
+    <p>Una misión futurista de 4 niveles para transformar problemas en algoritmos, pseudocódigo y decisiones lógicas.</p>
+    <div class="info-grid">
+      <div class="info"><b>16 retos</b><span>4 retos evaluables por nivel</span></div>
+      <div class="info"><b>45 minutos</b><span>Tiempo máximo de la misión</span></div>
+      <div class="info"><b>1 pista</b><span>Disponible en cada reto, sin penalización</span></div>
+    </div>
+    <div class="actions" style="justify-content:center"><button class="primary" id="startBtn">Iniciar misión</button></div>
+  </div>
+</section>
+
+<section id="screen-register" class="screen">
+  <div class="card">
+    <div class="eyebrow">Paso 1 · Identificación</div>
+    <h2>Registra tu perfil de misión</h2>
+    <p>Completa todos los datos antes de iniciar. El correo debe ser institucional.</p>
+    <form id="registerForm">
+      <label for="studentName">Nombre completo</label><input id="studentName" required>
+      <label for="studentDoc">Documento de identidad</label><input id="studentDoc" required>
+      <label for="studentEmail">Correo institucional</label><input id="studentEmail" type="email" required>
+      <div id="emailError" class="error"></div>
+      <label for="studentGroup">Grupo, curso, programa o semestre</label><input id="studentGroup" value="1.º semestre · Ingeniería de Sistemas" required>
+      <label class="checkbox"><input id="accept" type="checkbox" required><span>Declaro que participaré en esta experiencia de aprendizaje de manera responsable y que enviaré el reporte final al docente por el medio institucional indicado.</span></label>
+      <div class="notice">Esta experiencia de aprendizaje debe ser desarrollada de manera responsable. Al finalizar, deberás descargar el reporte de resultados y enviarlo al docente responsable por el medio institucional indicado.</div>
+      <div class="actions"><button class="primary" type="submit">Continuar</button></div>
+    </form>
+  </div>
+</section>
+
+<section id="screen-instructions" class="screen">
+  <div class="card">
+    <div class="eyebrow">Paso 2 · Briefing</div>
+    <h2>Tu misión</h2>
+    <p>Has sido seleccionado como <b>Ingeniero de Algoritmos</b>. Una falla en el núcleo lógico de una ciudad inteligente amenaza sus sistemas. Debes atravesar cuatro zonas y demostrar que puedes analizar problemas, construir algoritmos y tomar decisiones mediante pseudocódigo.</p>
+    <div class="grid">
+      <div class="info"><b>Zona 1 · Núcleo lógico</b><span>Algoritmos, variables, tipos de datos y operadores.</span></div>
+      <div class="info"><b>Zona 2 · Centro de decisiones</b><span>Condicionales y selección de alternativas.</span></div>
+      <div class="info"><b>Zona 3 · Motor de procesos</b><span>Ciclos y repetición controlada.</span></div>
+      <div class="info"><b>Zona 4 · Laboratorio de soluciones</b><span>Diagramas de flujo, pseudocódigo y resolución de problemas.</span></div>
+    </div>
+    <div class="notice" style="margin-top:16px">No existe un puntaje mínimo para desbloquear el siguiente nivel. Debes completar el nivel actual para continuar. La retroalimentación pedagógica se mostrará al finalizar toda la misión.</div>
+    <div class="actions"><button class="primary" id="briefingBtn">Entrar al mapa</button></div>
+  </div>
+</section>
+
+<section id="screen-levels" class="screen">
+  <div class="card">
+    <div class="eyebrow">Mapa de misión</div>
+    <h2>Selecciona el siguiente nivel disponible</h2>
+    <p>Los niveles se desbloquean progresivamente. El avance se centra en tu progreso personal.</p>
+    <div id="levelMap" class="levels"></div>
+    <div class="actions"><button class="danger" id="finishEarlyBtn">Finalizar juego</button></div>
+  </div>
+</section>
+
+<section id="screen-game" class="screen">
+  <div class="topbar no-print">
+    <div class="status-row"><span id="levelStatus"></span><span id="questionStatus"></span><span class="timer" id="timer">45:00</span></div>
+    <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+  </div>
+  <div class="card question">
+    <div id="questionBadge" class="badge"></div>
+    <h2 id="questionTitle"></h2>
+    <div id="questionText" class="question-text"></div>
+    <div id="options"></div>
+    <div id="hintArea"></div>
+    <div class="actions no-print">
+      <button class="secondary" id="prevBtn">Anterior</button>
+      <button class="secondary" id="hintBtn">💡 Ver pista</button>
+      <button class="primary" id="nextBtn">Siguiente</button>
+      <button class="danger" id="finishLevelBtn">Finalizar nivel</button>
+      <button class="danger" id="finishGameBtn">Finalizar juego</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-results" class="screen">
+  <div class="card">
+    <div class="eyebrow">Misión completada</div>
+    <h2>Reporte de desempeño</h2>
+    <div id="resultHeader"></div>
+    <div class="metric-grid" id="metrics"></div>
+    <div class="result-score"><div class="small">Nota final</div><div class="score" id="finalScore">0.0</div><div>/ 5.0</div><p id="performance"></p></div>
+    <div class="info-grid" id="badges"></div>
+    <h3>Reflexión del estudiante</h3>
+    <p>Escribe brevemente qué aprendiste, qué nivel fue más difícil, qué estrategia utilizaste y qué necesitas reforzar.</p>
+    <textarea id="reflection" placeholder="Tu reflexión..."></textarea>
+    <div class="actions no-print">
+      <button class="primary" id="downloadHtml">Descargar HTML</button>
+      <button class="secondary" id="downloadTxt">Descargar TXT</button>
+      <button class="secondary" id="downloadCsv">Descargar CSV</button>
+      <button class="secondary" id="copySummary">Copiar resumen</button>
+      <button class="secondary" id="sendMail">Enviar por correo</button>
+      <button class="secondary" id="printBtn">Imprimir / Guardar PDF</button>
+      <button class="secondary" id="viewSummary">Ver resumen de desempeño</button>
+    </div>
+    <div id="summaryPanel" style="display:none;margin-top:20px"></div>
+    <div class="notice" style="margin-top:20px">Has finalizado la experiencia de aprendizaje. Descarga tu reporte de resultados y súbelo a Moodle, Teams, Google Classroom o envíalo al docente por el medio institucional indicado. Recuerda adjuntar el archivo descargado para que tu participación pueda ser evaluada.</div>
+  </div>
+</section>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURACIÓN DEL DOCENTE
+   ============================================================
+   EDITA AQUÍ los datos y parámetros principales del juego.
+   TIEMPO_LIMITE_MINUTOS = 0 significa sin temporizador.
+   PERMITIR_REINTENTO = false activa un control básico desde
+   el mismo navegador.
+   ESCALA_NOTA = "5.0" indica una escala de 0.0 a 5.0.
+   Este control NO reemplaza Moodle ni sistemas institucionales.
+   ============================================================ */
+const NOMBRE_JUEGO = "Ingeniero de Algoritmos";
+const ASIGNATURA = "Lógica y Programación";
+const TEMA = "Programación básica y lógica computacional";
+const DOCENTE = "Emiro Berrio Rodriguez";
+const CORREO_DOCENTE = "emiro.berrior@unilibre.edu.co";
+const INSTITUCION = "Universidad Libre - Seccional Barranquilla";
+const DOMINIO_CORREO_INSTITUCIONAL = "@unilibre.edu.co";
+
+const MOSTRAR_RETROALIMENTACION_INMEDIATA = false;
+const MOSTRAR_RESULTADO_FINAL = true;
+const TIEMPO_LIMITE_MINUTOS = 45;
+const ALEATORIZAR_NIVELES = false;
+const ALEATORIZAR_RETOS = true;
+const ALEATORIZAR_OPCIONES = true;
+const PERMITIR_REINTENTO = false;
+const ESCALA_NOTA = "5.0";
+const PISTAS_POR_RETO = 1;
+const PENALIZACION_PISTA = 0;
+
+/* Aclaración institucional:
+   Este sistema funciona localmente. No envía automáticamente los
+   resultados a Moodle, Teams, Google Classroom ni a otra plataforma.
+   Genera archivos descargables para que el estudiante los suba
+   manualmente o los envíe al docente.
+   Las medidas de protección (localStorage, bloqueo básico de copiar/
+   pegar y clic derecho) no reemplazan Moodle, Safe Exam Browser ni
+   sistemas institucionales de supervisión.
+   El código de verificación NO es una firma digital oficial; ayuda
+   a detectar reportes duplicados o alterados.
+*/
+
+/* ============================================================
+   BANCO DE RETOS
+   4 niveles x 4 retos. Cada reto tiene una sola respuesta correcta.
+   ============================================================ */
+const nivelesBase = [
+{
+  nivel:1, nombreNivel:"Núcleo lógico", objetivo:"Reconocer la estructura de un algoritmo y aplicar variables, tipos de datos y operadores.",
+  retos:[
+   {id:"L1R1",tipo:"seleccion_multiple",pregunta:"Una aplicación debe calcular el total a pagar por tres productos. ¿Cuál secuencia representa mejor un algoritmo para resolver el problema?",opciones:[
+    "Leer precios, calcular suma y mostrar total","Mostrar total antes de leer precios","Repetir el problema sin almacenar datos","Usar una condición antes de conocer los precios"],correcta:0,
+    retroalimentacion:"Un algoritmo debe seguir una secuencia lógica: entrada de datos, procesamiento y salida del resultado.",competencia:"Diseña secuencias lógicas para resolver problemas.",evidencia:"Identificación de entrada, proceso y salida.",puntaje:10,pista:"Piensa en qué datos necesitas primero, qué operación realizas después y qué debes mostrar al final."
+   },
+   {id:"L1R2",tipo:"seleccion_multiple",pregunta:"En pseudocódigo se necesita guardar la edad de una persona y luego mostrarla. ¿Qué tipo de dato es el más apropiado?",opciones:["Cadena de texto","Entero","Booleano","Real"],correcta:1,
+    retroalimentacion:"La edad, cuando se trabaja en años completos, puede representarse mediante un dato entero.",competencia:"Selecciona tipos de datos adecuados.",evidencia:"Clasificación de datos según su naturaleza.",puntaje:10,pista:"La edad en años completos no necesita decimales ni representa verdadero/falso."
+   },
+   {id:"L1R3",tipo:"seleccion_multiple",pregunta:"Si A = 8 y B = 3, ¿qué valor produce la expresión A + B * 2 en un algoritmo que respeta la prioridad de operadores?",opciones:["22","14","19","16"],correcta:1,
+    retroalimentacion:"Primero se realiza la multiplicación: 3 × 2 = 6; después se suma 8 + 6 = 14. Por tanto, la opción correcta es 14.",competencia:"Aplica operadores y prioridad de operaciones.",evidencia:"Interpretación de expresiones aritméticas.",puntaje:10,pista:"Aplica primero la multiplicación y después la suma."
+   },
+   {id:"L1R4",tipo:"seleccion_multiple",pregunta:"Un algoritmo recibe nombre, edad y estado de matrícula. ¿Cuál variable debería ser booleana si solo puede indicar Sí o No?",opciones:["nombre","edad","estadoMatricula","promedio"],correcta:2,
+    retroalimentacion:"Un booleano representa dos estados lógicos, por ejemplo verdadero/falso o sí/no.",competencia:"Relaciona variables con su naturaleza lógica.",evidencia:"Selección de variables según el tipo de información.",puntaje:10,pista:"Busca el dato cuya respuesta solo puede tomar dos estados."
+   }
+  ]
+},
+{
+  nivel:2, nombreNivel:"Centro de decisiones", objetivo:"Aplicar operadores relacionales y estructuras condicionales para tomar decisiones.",
+  retos:[
+   {id:"L2R1",tipo:"seleccion_multiple",pregunta:"Una universidad define que un estudiante aprueba si su nota final es mayor o igual a 3.0. ¿Qué condición representa correctamente esta regla?",opciones:["nota > 3.0","nota == 3.0","nota >= 3.0","nota < 3.0"],correcta:2,
+    retroalimentacion:"La expresión >= incluye tanto valores mayores que 3.0 como exactamente 3.0.",competencia:"Construye condiciones con operadores relacionales.",evidencia:"Selección de una condición acorde con una regla.",puntaje:10,pista:"La palabra clave es 'mayor o igual'."
+   },
+   {id:"L2R2",tipo:"seleccion_multiple",pregunta:"Una cámara registra la velocidad de un vehículo. Si supera 80 km/h debe generar una alerta. ¿Qué estructura es más adecuada?",opciones:["Si velocidad > 80 Entonces alerta","Para velocidad = 80 Hasta 0","Mientras velocidad < 80 Entonces alerta","Si velocidad < 80 Entonces alerta"],correcta:0,
+    retroalimentacion:"La regla describe una decisión única: si la velocidad supera 80, se genera una alerta.",competencia:"Selecciona estructuras de control apropiadas.",evidencia:"Aplicación de condicionales a una situación real.",puntaje:10,pista:"No necesitas repetir una acción; necesitas decidir si se cumple una condición."
+   },
+   {id:"L2R3",tipo:"seleccion_multiple",pregunta:"Un sistema permite entrar a una sala si la persona tiene credencial válida Y está autorizada. ¿Qué operador lógico corresponde a la palabra 'Y'?",opciones:["OR","NOT","AND","MOD"],correcta:2,
+    retroalimentacion:"AND exige que ambas condiciones sean verdaderas para permitir el acceso.",competencia:"Aplica operadores lógicos en decisiones.",evidencia:"Interpretación de condiciones compuestas.",puntaje:10,pista:"Ambas condiciones deben cumplirse al mismo tiempo."
+   },
+   {id:"L2R4",tipo:"seleccion_multiple",pregunta:"Observa el siguiente pseudocódigo: Si nota >= 3 Entonces Escribir 'Aprueba' SiNo Escribir 'No aprueba' FinSi. Si nota = 2.8, ¿qué salida se produce?",opciones:["Aprueba","No aprueba","2.8","Error necesariamente"],correcta:1,
+    retroalimentacion:"Como 2.8 no es mayor ni igual a 3.0, se ejecuta la alternativa SiNo.",competencia:"Interpreta la ejecución de estructuras condicionales.",evidencia:"Predicción de salida de pseudocódigo.",puntaje:10,pista:"Compara 2.8 con 3.0 y determina si la condición es verdadera."
+   }
+  ]
+},
+{
+  nivel:3, nombreNivel:"Motor de procesos", objetivo:"Comprender y seleccionar ciclos para repetir acciones de manera controlada.",
+  retos:[
+   {id:"L3R1",tipo:"seleccion_multiple",pregunta:"Necesitas mostrar los números del 1 al 10 exactamente una vez. ¿Qué estructura resulta más apropiada?",opciones:["Si...Entonces","Para i = 1 Hasta 10","SiNo","Leer...Escribir sin repetición"],correcta:1,
+    retroalimentacion:"Un ciclo Para es apropiado cuando conocemos el número de repeticiones: del 1 al 10.",competencia:"Selecciona estructuras repetitivas según el problema.",evidencia:"Relación entre número de repeticiones y ciclo.",puntaje:10,pista:"Conoces de antemano que habrá exactamente 10 repeticiones."
+   },
+   {id:"L3R2",tipo:"seleccion_multiple",pregunta:"Un programa debe seguir solicitando una contraseña mientras la contraseña ingresada sea incorrecta. ¿Qué ciclo representa mejor la lógica?",opciones:["Para con 10 repeticiones","Mientras contraseña sea incorrecta","Si contraseña sea incorrecta","Escribir contraseña una sola vez"],correcta:1,
+    retroalimentacion:"Mientras permite repetir una acción mientras una condición se mantenga verdadera.",competencia:"Diferencia ciclos controlados por condición y por contador.",evidencia:"Selección de ciclo ante una condición de repetición.",puntaje:10,pista:"La cantidad de intentos no está fijada; depende de una condición."
+   },
+   {id:"L3R3",tipo:"seleccion_multiple",pregunta:"Un algoritmo usa contador = contador + 1 dentro de un ciclo. ¿Cuál es la función principal de esa instrucción?",opciones:["Disminuir el contador","Acumular o incrementar una unidad","Comparar dos variables","Finalizar el programa"],correcta:1,
+    retroalimentacion:"La instrucción incrementa el valor actual del contador en una unidad.",competencia:"Interpreta contadores en algoritmos repetitivos.",evidencia:"Comprensión del estado de una variable dentro de un ciclo.",puntaje:10,pista:"Si el contador vale 4, después de la instrucción valdrá 5."
+   },
+   {id:"L3R4",tipo:"seleccion_multiple",pregunta:"Se desea sumar las ventas de 5 días. ¿Qué combinación representa mejor la solución?",opciones:["Un acumulador y un ciclo que recorra los 5 días","Solo una variable booleana","Un condicional sin repetición","Un ciclo infinito sin acumulador"],correcta:0,
+    retroalimentacion:"El acumulador conserva la suma parcial y el ciclo permite procesar cada uno de los cinco días.",competencia:"Integra ciclos, contadores y acumuladores.",evidencia:"Selección de una estrategia algorítmica para acumulación.",puntaje:10,pista:"Necesitas repetir el ingreso/procesamiento y conservar una suma."
+   }
+  ]
+},
+{
+  nivel:4, nombreNivel:"Laboratorio de soluciones", objetivo:"Integrar análisis del problema, diagramas de flujo y pseudocódigo para tomar decisiones algorítmicas.",
+  retos:[
+   {id:"L4R1",tipo:"seleccion_multiple",pregunta:"Para un algoritmo que calcula el promedio de tres notas, ¿cuál es la secuencia lógica más completa?",opciones:[
+    "Mostrar promedio → leer notas → sumar","Leer tres notas → calcular suma/promedio → mostrar resultado","Comparar notas → finalizar → leer notas","Repetir sin leer datos → mostrar promedio"],correcta:1,
+    retroalimentacion:"La solución debe obtener las entradas, procesarlas y finalmente presentar el resultado.",competencia:"Integra entrada, procesamiento y salida.",evidencia:"Construcción mental de la estructura de un algoritmo.",puntaje:10,pista:"Recuerda la secuencia IPO: entrada, proceso y salida."
+   },
+   {id:"L4R2",tipo:"seleccion_multiple",pregunta:"En un diagrama de flujo, ¿qué figura representa normalmente una decisión?",opciones:["Rectángulo","Óvalo","Rombo","Paralelogramo"],correcta:2,
+    retroalimentacion:"El rombo se utiliza para representar una decisión o condición que puede conducir a diferentes caminos.",competencia:"Interpreta símbolos básicos de diagramas de flujo.",evidencia:"Identificación de estructuras gráficas de control.",puntaje:10,pista:"Busca la figura que representa una pregunta con dos o más caminos posibles."
+   },
+   {id:"L4R3",tipo:"seleccion_multiple",pregunta:"Una tienda aplica 10% de descuento cuando la compra supera $100.000. ¿Cuál es la estrategia algorítmica correcta?",opciones:[
+    "Siempre restar 10%, sin revisar el valor","Leer compra, verificar si compra > 100000 y aplicar descuento solo si se cumple","Aplicar descuento antes de conocer la compra","Usar un ciclo obligatorio para una sola decisión"],correcta:1,
+    retroalimentacion:"El problema exige una condición: solo cuando el valor supera $100.000 se calcula el descuento.",competencia:"Resuelve situaciones problema mediante decisiones algorítmicas.",evidencia:"Selección de estrategia para una regla de negocio.",puntaje:10,pista:"La frase 'cuando supera' indica una condición."
+   },
+   {id:"L4R4",tipo:"seleccion_multiple",pregunta:"Un algoritmo debe determinar si un número es par. ¿Qué expresión es la más adecuada para comprobarlo?",opciones:["numero / 2 == 0","numero MOD 2 == 0","numero + 2 == 0","numero * 2 == 0"],correcta:1,
+    retroalimentacion:"El operador MOD obtiene el residuo de una división. Un número es par cuando el residuo al dividirlo entre 2 es 0.",competencia:"Selecciona operadores para resolver problemas computacionales.",evidencia:"Aplicación del operador módulo en una decisión.",puntaje:10,pista:"Busca el operador que permite obtener el residuo de una división."
+   }
+  ]
+}
+];
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+let niveles = structuredClone(nivelesBase);
+let currentLevel = 0, currentQuestion = 0, started = false, finished = false;
+let startTime = null, endTime = null, timerId = null, remainingSeconds = TIEMPO_LIMITE_MINUTOS * 60;
+let soundOn = true;
+const answers = {};
+const questionTimes = {};
+const levelTimes = {};
+let questionStartedAt = null;
+let hintsUsed = {};
+let student = {};
+
+const $ = id => document.getElementById(id);
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+function escapeHtml(v){
+  return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function sanitizeFileName(v){return String(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]+/g,"_").replace(/^_+|_+$/g,"").slice(0,70)||"estudiante"}
+function formatDate(d){return new Date(d).toLocaleString("es-CO",{dateStyle:"medium",timeStyle:"medium"})}
+function formatTime(sec){
+  sec=Math.max(0,Math.round(sec)); const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
+  return h?`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`:`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+function playTone(freq=500,dur=.08){
+  if(!soundOn)return;
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+    const c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.type="sine";
+    g.gain.setValueAtTime(.03,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+dur);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+dur);
+  }catch(e){}
+}
+function hasAnswer(q){return answers[q.id] !== undefined}
+function allAnswered(levelIndex){
+  return niveles[levelIndex].retos.every(q=>hasAnswer(q));
+}
+function totalQuestions(){return niveles.reduce((s,l)=>s+l.retos.length,0)}
+function answeredCount(){return Object.keys(answers).length}
+function levelProgress(i){return niveles[i].retos.filter(hasAnswer).length/niveles[i].retos.length}
+function totalPossible(){return niveles.reduce((s,l)=>s+l.retos.reduce((a,q)=>a+q.puntaje,0),0)}
+function scoreData(){
+  let obtained=0, possible=0, correct=0, incorrect=0;
+  niveles.forEach(l=>l.retos.forEach(q=>{
+    possible+=q.puntaje;
+    if(answers[q.id]!==undefined){
+      if(answers[q.id]===q.correcta){obtained+=Math.max(0,q.puntaje-(hintsUsed[q.id]?PENALIZACION_PISTA:0));correct++}
+      else incorrect++;
+    }
+  }));
+  const pct=possible?obtained/possible*100:0;
+  const note=Math.min(5,Math.max(0,Math.round((obtained/possible*5)*10)/10));
+  let performance=pct>=90?"Superior":pct>=80?"Alto":pct>=60?"Básico":"Bajo";
+  return {obtained,possible,correct,incorrect,pct,note,performance};
+}
+function simpleHash(str){
+  let h=2166136261;
+  for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(16).toUpperCase().padStart(8,"0");
+}
+function verificationCode(){
+  const s=scoreData();
+  return simpleHash([student.name,student.doc,student.email,NOMBRE_JUEGO,startTime?.toISOString(),endTime?.toISOString(),s.obtained,s.possible,s.note].join("|"));
+}
+
+/* ============================================================
+   PREPARACIÓN ALEATORIA
+   ============================================================ */
+function prepareGame(){
+  niveles=structuredClone(nivelesBase);
+  niveles.forEach(l=>{
+    if(ALEATORIZAR_RETOS)l.retos=shuffle(l.retos);
+    if(ALEATORIZAR_OPCIONES){
+      l.retos.forEach(q=>{
+        const pairs=q.opciones.map((text,i)=>({text,i}));
+        const shuffled=shuffle(pairs);
+        q.opciones=shuffled.map(x=>x.text);
+        q.correcta=shuffled.findIndex(x=>x.i===q.correcta);
+      });
+    }
+  });
+  if(ALEATORIZAR_NIVELES)niveles=shuffle(niveles);
+}
+
+/* ============================================================
+   REGISTRO / CONTROL DE INTENTO
+   ============================================================ */
+function attemptKey(){
+  return `juego_${NOMBRE_JUEGO}_${student.email}_${student.doc}`.toLowerCase().replace(/\s+/g,"_");
+}
+function isPreviousAttempt(){
+  return !PERMITIR_REINTENTO && localStorage.getItem(attemptKey())==="completed";
+}
+function markAttempt(){localStorage.setItem(attemptKey(),"completed")}
+
+$("startBtn").onclick=()=>showScreen("screen-register");
+$("registerForm").onsubmit=e=>{
+  e.preventDefault();
+  const email=$("studentEmail").value.trim().toLowerCase();
+  $("emailError").textContent="";
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !email.endsWith(DOMINIO_CORREO_INSTITUCIONAL)){
+    $("emailError").textContent="Debes ingresar tu correo institucional terminado en @unilibre.edu.co";
+    return;
+  }
+  student={name:$("studentName").value.trim(),doc:$("studentDoc").value.trim(),email,group:$("studentGroup").value.trim()};
+  if(isPreviousAttempt()){
+    $("emailError").textContent="Este intento ya fue registrado en este dispositivo";
+    return;
+  }
+  prepareGame(); showScreen("screen-instructions");
+};
+$("briefingBtn").onclick=()=>{
+  started=true; startTime=new Date(); remainingSeconds=TIEMPO_LIMITE_MINUTOS*60;
+  if(TIEMPO_LIMITE_MINUTOS>0) startTimer();
+  renderLevelMap(); showScreen("screen-levels"); playTone(700,.12);
+};
+
+function startTimer(){
+  clearInterval(timerId);
+  timerId=setInterval(()=>{
+    remainingSeconds--; $("timer").textContent=formatTime(remainingSeconds);
+    if(remainingSeconds===120)alert("Quedan 2 minutos para finalizar la misión.");
+    if(remainingSeconds<=0){clearInterval(timerId); finishGame(true)}
+  },1000);
+}
+function renderLevelMap(){
+  $("levelMap").innerHTML=niveles.map((l,i)=>{
+    const unlocked=i===0 || levelProgress(i-1)===1;
+    const done=levelProgress(i)===1;
+    return `<div class="level ${unlocked?"":"locked"} ${done?"done":""}">
+      <span class="badge">${done?"✓ Superado":unlocked?"Desbloqueado":"🔒 Bloqueado"}</span>
+      <h3>Nivel ${i+1}: ${escapeHtml(l.nombreNivel)}</h3>
+      <p>${escapeHtml(l.objetivo)}</p>
+      <div class="small">${Math.round(levelProgress(i)*100)}% completado</div>
+      <div class="actions"><button class="${unlocked?"primary":"secondary"}" ${unlocked?"":"disabled"} onclick="openLevel(${i})">${done?"Revisar":"Entrar"}</button></div>
+    </div>`;
+  }).join("");
+}
+window.openLevel=function(i){
+  if(i>0 && levelProgress(i-1)<1)return;
+  currentLevel=i; currentQuestion=0; levelTimes[i]=levelTimes[i]||{start:new Date().toISOString(),end:null};
+  questionStartedAt=Date.now(); renderQuestion(); showScreen("screen-game"); playTone(650,.08);
+};
+
+function renderQuestion(){
+  const l=niveles[currentLevel],q=l.retos[currentQuestion];
+  $("levelStatus").textContent=`Nivel ${currentLevel+1} de ${niveles.length} · ${l.nombreNivel}`;
+  $("questionStatus").textContent=`Reto ${currentQuestion+1} de ${l.retos.length}`;
+  $("questionBadge").textContent=`RETO ${q.id}`;
+  $("questionTitle").textContent=l.nombreNivel;
+  $("questionText").textContent=q.pregunta;
+  $("options").innerHTML=q.opciones.map((o,i)=>`
+    <button class="option ${answers[q.id]===i?"selected":""}" onclick="selectOption(${i})">${String.fromCharCode(65+i)}. ${escapeHtml(o)}</button>`).join("");
+  $("hintArea").innerHTML=hintsUsed[q.id]?`<div class="hint">💡 <b>Pista:</b> ${escapeHtml(q.pista)}</div>`:"";
+  $("hintBtn").disabled=!!hintsUsed[q.id];
+  $("prevBtn").disabled=currentQuestion===0;
+  $("nextBtn").textContent=currentQuestion===l.retos.length-1?"Finalizar nivel":"Siguiente";
+  const globalIndex=niveles.slice(0,currentLevel).reduce((s,x)=>s+x.retos.length,0)+currentQuestion;
+  $("progressBar").style.width=`${((globalIndex)/totalQuestions())*100}%`;
+  $("timer").textContent=TIEMPO_LIMITE_MINUTOS?formatTime(remainingSeconds):"Sin límite";
+  questionStartedAt=Date.now();
+}
+window.selectOption=function(i){
+  const q=niveles[currentLevel].retos[currentQuestion];
+  if(questionStartedAt)questionTimes[q.id]=(questionTimes[q.id]||0)+Math.round((Date.now()-questionStartedAt)/1000);
+  answers[q.id]=i; playTone(780,.05); renderQuestion();
+};
+$("hintBtn").onclick=()=>{
+  const q=niveles[currentLevel].retos[currentQuestion];
+  if(!hintsUsed[q.id]){hintsUsed[q.id]=true;playTone(420,.08);renderQuestion()}
+};
+$("prevBtn").onclick=()=>{if(currentQuestion>0){currentQuestion--;renderQuestion()}};
+$("nextBtn").onclick=()=>{
+  const q=niveles[currentLevel].retos[currentQuestion];
+  if(!hasAnswer(q)){alert("Debes responder este reto antes de continuar.");return}
+  if(currentQuestion<niveles[currentLevel].retos.length-1){currentQuestion++;renderQuestion()}
+  else finishLevel();
+};
+$("finishLevelBtn").onclick=finishLevel;
+function finishLevel(){
+  const l=niveles[currentLevel];
+  if(!allAnswered(currentLevel)){alert("Debes responder los 4 retos del nivel antes de finalizarlo.");return}
+  levelTimes[currentLevel].end=new Date().toISOString();
+  if(currentLevel<niveles.length-1){renderLevelMap();showScreen("screen-levels");playTone(900,.1)}
+  else finishGame(false);
+}
+$("finishGameBtn").onclick=()=>finishGame(false);
+$("finishEarlyBtn").onclick=()=>finishGame(false);
+
+function finishGame(timeExpired=false){
+  if(finished)return;
+  if(!timeExpired && answeredCount()<totalQuestions()){
+    if(!confirm("Aún tienes retos sin responder. ¿Deseas finalizar la misión con el progreso actual?"))return;
+  }
+  finished=true; endTime=new Date(); clearInterval(timerId);
+  niveles.forEach((l,i)=>{if(levelTimes[i]&&!levelTimes[i].end)levelTimes[i].end=endTime.toISOString()});
+  markAttempt(); renderResults(timeExpired); showScreen("screen-results"); playTone(1000,.15);
+}
+
+function levelSeconds(i){
+  const t=levelTimes[i]; if(!t||!t.start)return 0;
+  return Math.max(0,(new Date(t.end||endTime)-new Date(t.start))/1000);
+}
+function resultHeader(){
+  return `<div class="grid">
+    <div class="info"><b>Estudiante</b><span>${escapeHtml(student.name)}</span></div>
+    <div class="info"><b>Documento</b><span>${escapeHtml(student.doc)}</span></div>
+    <div class="info"><b>Correo</b><span>${escapeHtml(student.email)}</span></div>
+    <div class="info"><b>Grupo</b><span>${escapeHtml(student.group)}</span></div>
+    <div class="info"><b>Docente</b><span>${escapeHtml(DOCENTE)}</span></div>
+    <div class="info"><b>Verificación</b><span>${verificationCode()}</span></div>
+  </div>`;
+}
+function renderResults(timeExpired){
+  const s=scoreData();
+  $("resultHeader").innerHTML=`<p><b>${escapeHtml(INSTITUCION)}</b> · ${escapeHtml(ASIGNATURA)} · ${escapeHtml(TEMA)}</p>${resultHeader()}`;
+  $("metrics").innerHTML=[
+    ["Puntaje",`${s.obtained} / ${s.possible}`],["Logro",`${s.pct.toFixed(1)}%`],["Correctas",s.correct],["Incorrectas",s.incorrect],
+    ["Tiempo total",formatTime((endTime-startTime)/1000)],["Niveles superados",niveles.filter((_,i)=>levelProgress(i)===1).length],["Estado",timeExpired?"Tiempo agotado":answeredCount()===totalQuestions()?"Completado":"Incompleto"],["Código",verificationCode()]
+  ].map(x=>`<div class="metric"><b>${escapeHtml(x[1])}</b><span>${escapeHtml(x[0])}</span></div>`).join("");
+  $("finalScore").textContent=s.note.toFixed(1);
+  $("performance").textContent=`Nivel de desempeño: ${s.performance}`;
+  const badges=[];
+  if(s.correct>=12)badges.push(["🧠","Analista lógico","12 o más respuestas correctas"]);
+  if(s.correct===16)badges.push(["🚀","Maestro de algoritmos","Completó los 16 retos correctamente"]);
+  if(s.pct>=80)badges.push(["⚡","Núcleo optimizado","Logro de 80% o superior"]);
+  if(!badges.length)badges.push(["🔧","Explorador","Completó la misión y obtuvo información para mejorar"]);
+  $("badges").innerHTML=badges.map(b=>`<div class="info"><b>${b[0]} ${b[1]}</b><span>${b[2]}</span></div>`).join("");
+  renderSummaryPanel();
+}
+function renderSummaryPanel(){
+  const rows=niveles.flatMap(l=>l.retos.map(q=>{
+    const sel=answers[q.id];
+    const result=sel===undefined?"Pendiente":sel===q.correcta?"Correcta":"Incorrecta";
+    return `<tr><td>${q.id}</td><td>${escapeHtml(q.pregunta)}</td><td>${sel===undefined?"—":escapeHtml(q.opciones[sel])}</td><td>${escapeHtml(q.opciones[q.correcta])}</td><td>${result}</td><td>${sel===q.correcta?q.puntaje:0}/${q.puntaje}</td><td>${formatTime(questionTimes[q.id]||0)}</td></tr>`;
+  })).join("");
+  $("summaryPanel").innerHTML=`<h3>Detalle de desempeño</h3><div class="table-wrap"><table><thead><tr><th>Reto</th><th>Pregunta</th><th>Respuesta seleccionada</th><th>Correcta</th><th>Resultado</th><th>Puntaje</th><th>Tiempo</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+$("viewSummary").onclick=()=>{const p=$("summaryPanel");p.style.display=p.style.display==="none"?"block":"none"};
+$("reflection").addEventListener("input",()=>{});
+function buildReport(){
+  const s=scoreData(), reflection=$("reflection").value.trim();
+  return {student, juego:NOMBRE_JUEGO, asignatura:ASIGNATURA, tema:TEMA, docente:DOCENTE, correoDocente:CORREO_DOCENTE,
+    institucion:INSTITUCION,start:startTime?.toISOString(),end:endTime?.toISOString(),
+    tiempoTotal:Math.round((endTime-startTime)/1000),timeExpired:TIEMPO_LIMITE_MINUTOS>0&&remainingSeconds<=0,
+    nivelesTotales:niveles.length,nivelesSuperados:niveles.filter((_,i)=>levelProgress(i)===1).length,
+    preguntasTotales:totalQuestions(),respuestasCorrectas:s.correct,respuestasIncorrectas:s.incorrect,
+    puntaje:s.obtained,puntajeMaximo:s.possible,porcentaje:s.pct,nota:s.note,desempeno:s.performance,
+    badges:$("badges").innerText,reflection,codigo:verificationCode(),levels:niveles.map((l,i)=>({
+      nivel:l.nivel,nombre:l.nombreNivel,superado:levelProgress(i)===1,tiempo:Math.round(levelSeconds(i)),
+      retos:l.retos.map(q=>({id:q.id,pregunta:q.pregunta,opciones:q.opciones,respuestaSeleccionada:q.opciones[answers[q.id]]??null,
+        respuestaCorrecta:q.opciones[q.correcta],resultado:answers[q.id]===undefined?"pendiente":answers[q.id]===q.correcta?"correcta":"incorrecta",
+        puntajeObtenido:answers[q.id]===q.correcta?q.puntaje:0,puntajeMaximo:q.puntaje,intentos:answers[q.id]===undefined?0:1,
+        pistaUsada:!!hintsUsed[q.id],retroalimentacion:q.retroalimentacion,competencia:q.competencia,evidencia:q.evidencia,
+        tiempoRespuesta:questionTimes[q.id]||0}))}))};
+}
+function reportText(){
+  const r=buildReport();
+  let out=`${r.institucion}\n${r.juego}\nAsignatura: ${r.asignatura}\nTema: ${r.tema}\nDocente: ${r.docente}\nCorreo docente: ${r.correoDocente}\n\n`;
+  out+=`ESTUDIANTE\nNombre: ${r.student.name}\nDocumento: ${r.student.doc}\nCorreo: ${r.student.email}\nGrupo: ${r.student.group}\nInicio: ${formatDate(r.start)}\nFinalización: ${formatDate(r.end)}\nTiempo total: ${formatTime(r.tiempoTotal)}\nEstado: ${r.timeExpired?"Tiempo agotado":r.nivelesSuperados===r.nivelesTotales?"Completado":"Incompleto"}\n\n`;
+  out+=`RESULTADOS\nPuntaje: ${r.puntaje}/${r.puntajeMaximo}\nPorcentaje: ${r.porcentaje.toFixed(1)}%\nNota final: ${r.nota.toFixed(1)} / 5.0\nNivel de desempeño: ${r.desempeno}\nCorrectas: ${r.respuestasCorrectas}\nIncorrectas: ${r.respuestasIncorrectas}\nNiveles superados: ${r.nivelesSuperados}/${r.nivelesTotales}\nCódigo de verificación: ${r.codigo}\n\n`;
+  r.levels.forEach(l=>{out+=`NIVEL ${l.nivel} - ${l.nombre} | ${l.superado?"SUPERADO":"NO SUPERADO"} | Tiempo: ${formatTime(l.tiempo)}\n`;
+    l.retos.forEach(q=>out+=`${q.id} | ${q.resultado} | Seleccionada: ${q.respuestaSeleccionada||"—"} | Correcta: ${q.respuestaCorrecta} | Puntaje: ${q.puntajeObtenido}/${q.puntajeMaximo} | Tiempo: ${formatTime(q.tiempoRespuesta)} | Pista: ${q.pistaUsada?"Sí":"No"}\n`);
+    out+="\n"});
+  out+=`REFLEXIÓN DEL ESTUDIANTE\n${r.reflection||"No registrada"}\n`;
+  return out;
+}
+function csvEscape(v){return `"${String(v??"").replace(/"/g,'""')}"`}
+function reportCsv(){
+  const r=buildReport(), lines=[];
+  lines.push(["Institucion","Juego","Asignatura","Tema","Docente","CorreoDocente","Nombre","Documento","Correo","Grupo","Inicio","Fin","TiempoTotal","Estado","Puntaje","PuntajeMaximo","Porcentaje","Nota","Desempeno","Codigo"].map(csvEscape).join(","));
+  lines.push([r.institucion,r.juego,r.asignatura,r.tema,r.docente,r.correoDocente,r.student.name,r.student.doc,r.student.email,r.student.group,r.start,r.end,r.tiempoTotal,r.timeExpired?"Tiempo agotado":r.nivelesSuperados===r.nivelesTotales?"Completado":"Incompleto",r.puntaje,r.puntajeMaximo,r.porcentaje.toFixed(1),r.nota.toFixed(1),r.desempeno,r.codigo].map(csvEscape).join(","));
+  lines.push("");
+  lines.push(["Nivel","NombreNivel","ID","Pregunta","RespuestaSeleccionada","RespuestaCorrecta","Resultado","PuntajeObtenido","PuntajeMaximo","Pista","TiempoRespuesta","Competencia","Evidencia"].map(csvEscape).join(","));
+  r.levels.forEach(l=>l.retos.forEach(q=>lines.push([l.nivel,l.nombre,q.id,q.pregunta,q.respuestaSeleccionada,q.respuestaCorrecta,q.resultado,q.puntajeObtenido,q.puntajeMaximo,q.pistaUsada?"Si":"No",q.tiempoRespuesta,q.competencia,q.evidencia].map(csvEscape).join(","))));
+  return "\ufeff"+lines.join("\n");
+}
+function download(name,content,type){
+  const blob=new Blob([content],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function htmlReport(){
+  const r=buildReport(), s=scoreData();
+  const rows=r.levels.flatMap(l=>l.retos.map(q=>`<tr><td>${q.id}</td><td>${escapeHtml(q.pregunta)}</td><td>${escapeHtml(q.respuestaSeleccionada||"—")}</td><td>${escapeHtml(q.respuestaCorrecta)}</td><td>${q.resultado}</td><td>${q.puntajeObtenido}/${q.puntajeMaximo}</td><td>${formatTime(q.tiempoRespuesta)}</td></tr>`)).join("");
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Resultado ${escapeHtml(r.student.name)}</title>
+  <style>body{font-family:Arial,sans-serif;margin:30px;color:#152039}h1{color:#4b42b8}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{padding:8px;border:1px solid #ddd;text-align:left}th{background:#eef1ff}.score{font-size:38px;font-weight:bold}.box{padding:16px;background:#f5f7fb;border-radius:12px;margin:12px 0}.small{color:#555}@media(max-width:700px){body{margin:12px}table{min-width:800px}.table{overflow:auto}}</style></head><body>
+  <h1>${escapeHtml(r.juego)}</h1><p>${escapeHtml(r.institucion)} · ${escapeHtml(r.asignatura)} · ${escapeHtml(r.tema)}</p>
+  <div class="box"><b>Estudiante:</b> ${escapeHtml(r.student.name)}<br><b>Documento:</b> ${escapeHtml(r.student.doc)}<br><b>Correo:</b> ${escapeHtml(r.student.email)}<br><b>Grupo:</b> ${escapeHtml(r.student.group)}</div>
+  <div class="box"><b>Docente:</b> ${escapeHtml(r.docente)} · ${escapeHtml(r.correoDocente)}<br><b>Inicio:</b> ${formatDate(r.start)}<br><b>Fin:</b> ${formatDate(r.end)}<br><b>Tiempo:</b> ${formatTime(r.tiempoTotal)}</div>
+  <div class="score">Nota final: ${s.note.toFixed(1)} / 5.0</div><p>Porcentaje: ${s.pct.toFixed(1)}% · Desempeño: ${s.performance} · Puntaje: ${s.obtained}/${s.possible}</p>
+  <p><b>Código de verificación:</b> ${r.codigo}</p><h2>Detalle por reto</h2><div class="table"><table><thead><tr><th>Reto</th><th>Pregunta</th><th>Seleccionada</th><th>Correcta</th><th>Resultado</th><th>Puntaje</th><th>Tiempo</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <h2>Reflexión</h2><p>${escapeHtml(r.reflection||"No registrada")}</p></body></html>`;
+}
+function baseFileName(ext){return `resultado_${sanitizeFileName(student.name)}_${sanitizeFileName(student.doc)}_${sanitizeFileName(NOMBRE_JUEGO)}.${ext}`}
+$("downloadHtml").onclick=()=>download(baseFileName("html"),htmlReport(),"text/html;charset=utf-8");
+$("downloadTxt").onclick=()=>download(baseFileName("txt"),reportText(),"text/plain;charset=utf-8");
+$("downloadCsv").onclick=()=>download(baseFileName("csv"),reportCsv(),"text/csv;charset=utf-8");
+$("copySummary").onclick=async()=>{
+  const r=buildReport(),s=scoreData();
+  const text=`Nombre: ${r.student.name}\nDocumento: ${r.student.doc}\nCorreo institucional: ${r.student.email}\nGrupo: ${r.student.group}\nJuego: ${r.juego}\nPuntaje: ${s.obtained}/${s.possible}\nPorcentaje: ${s.pct.toFixed(1)}%\nNota final: ${s.note.toFixed(1)} / 5.0\nNivel de desempeño: ${s.performance}\nTiempo total: ${formatTime(r.tiempoTotal)}\nCódigo de verificación: ${r.codigo}`;
+  try{await navigator.clipboard.writeText(text);alert("Resumen copiado al portapapeles.")}catch(e){alert("No fue posible copiar automáticamente. Puedes usar el reporte descargable.")}
+};
+$("sendMail").onclick=()=>{
+  const r=buildReport(),s=scoreData();
+  const subject=`Resultado del juego - ${r.student.name} - ${NOMBRE_JUEGO}`;
+  const body=`Nombre: ${r.student.name}\nDocumento de identidad: ${r.student.doc}\nCorreo institucional: ${r.student.email}\nGrupo: ${r.student.group}\nPuntaje obtenido: ${s.obtained}\nPuntaje máximo posible: ${s.possible}\nPorcentaje de logro: ${s.pct.toFixed(1)}%\nNota final: ${s.note.toFixed(1)} / 5.0\nNivel de desempeño: ${s.performance}\nTiempo total usado: ${formatTime(r.tiempoTotal)}\nCódigo de verificación: ${r.codigo}\n\nRecuerda adjuntar el archivo descargado del reporte.`;
+  location.href=`mailto:${encodeURIComponent(CORREO_DOCENTE)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+$("printBtn").onclick=()=>window.print();
+$("soundBtn").onclick=()=>{soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Sonido: activado":"🔇 Sonido: desactivado";if(soundOn)playTone(700,.08)};
+
+/* ============================================================
+   PROTECCIÓN BÁSICA / HONESTIDAD ACADÉMICA
+   ============================================================ */
+document.addEventListener("contextmenu",e=>{if(started&&!finished)e.preventDefault()});
+document.addEventListener("keydown",e=>{
+  if(!started||finished)return;
+  if((e.ctrlKey||e.metaKey)&&["c","v","x"].includes(e.key.toLowerCase()))e.preventDefault();
+});
+
+/* Exponer una pequeña función para revisión de estado en consola.
+   No constituye seguridad: el código fuente local puede ser inspeccionado. */
+window.JUEGO_CONFIG={NOMBRE_JUEGO,ASIGNATURA,TEMA,DOCENTE,CORREO_DOCENTE,INSTITUCION,TIEMPO_LIMITE_MINUTOS,ALEATORIZAR_RETOS,ALEATORIZAR_OPCIONES,PERMITIR_REINTENTO,ESCALA_NOTA};
+</script>
+</body>
+</html>
